@@ -32,13 +32,18 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
-    let initialBoard = [];
+    const initialBoard = [];
     // TODO: create array-of-arrays of true/false values
+    for (let row = 0; row < nrows; row++) {
+      const col = Array.from({ length: ncols }).map(() => Math.round(Math.random()) === 1);
+      initialBoard.push(col);
+    }
     return initialBoard;
   }
-
+  
   function hasWon() {
     // TODO: check the board in state to determine whether the player has won.
+    return !board.some(row => row.some(cell => cell));
   }
 
   function flipCellsAround(coord) {
