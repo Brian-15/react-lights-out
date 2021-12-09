@@ -32,12 +32,15 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
   function createBoard() {
-    const initialBoard = [];
-    // TODO: create array-of-arrays of true/false values
+    let initialBoard = [];
     for (let row = 0; row < nrows; row++) {
-      const col = Array.from({ length: ncols }).map(() => Math.round(Math.random()) === 1);
-      initialBoard.push(col);
+      const cells = new Array(ncols).fill(true);
+      initialBoard.push(cells.map(() => {
+        return Math.random() > chanceLightStartsOn;
+      }));
     }
+    console.log(initialBoard);
+    // TODO: create array-of-arrays of true/false values
     return initialBoard;
   }
   
@@ -59,20 +62,48 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
       };
 
       // TODO: Make a (deep) copy of the oldBoard
+      const newBoard = [...oldBoard.map(row => [...row])];
 
       // TODO: in the copy, flip this cell and the cells around it
+      flipCell(y, x, newBoard);
+      flipCell(y + 1, x, newBoard);
+      flipCell(y, x + 1, newBoard);
+      flipCell(y - 1, x, newBoard);
+      flipCell(y, x - 1, newBoard);
 
       // TODO: return the copy
+      return newBoard;
     });
   }
 
   // if the game is won, just show a winning msg & render nothing else
 
   // TODO
+  if (hasWon()) {
+    return (
+      <p>You've won! :D</p>
+    );
+  }
 
   // make table board
 
   // TODO
+  return (
+    <table>
+      <tbody>
+      {board.map(row => (
+        <tr>
+          {row.map(cell => (
+            <Cell
+              isLit={cell}
+              flipCellsAroundMe={flipCellsAround}
+            />
+          ))}
+        </tr>
+      ))}
+      </tbody>
+    </table>
+  );
 }
 
 export default Board;
